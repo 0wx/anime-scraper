@@ -1,8 +1,9 @@
 const res = require('./res.json');
 const {
-  samehadaku: { getDownloadUrl },
+  samehadaku: { getAnimeList, getEpisodesList, getDownloadUrl },
+  anime: { search, info },
 } = require('./lib');
-(async () => {
+const tes2 = async () => {
   let _res = res.results,
     temp;
   for (var i = 0; i < _res.length; i++) {
@@ -29,46 +30,43 @@ const {
   }
 
   require('fs').writeFileSync('./res2.json', JSON.stringify(_res, null, 4));
-})();
+};
 
-// const {
-//   samehadaku: { getAnimeList, getEpisodesList },
-//   anime: { search, info },
-// } = require('./lib');
 
-// (async () => {
-//   let links = await getAnimeList(),
-//     results = [],
-//     bad = [],
-//     i = 0;
 
-//   for (let link of links) {
-//     i++;
-//     console.log(`B - ${i}/${links.length}`)
-//     try {
-//       let mal = await search(link.title);
-//       let eps = await getEpisodesList(link.url);
-//       if (eps.ok) {
-//         results.push({
-//           ...mal,
-//           ...eps,
-//         });
-//       } else {
-//         bad.push(link);
-//       }
-//     } catch (e) {
-//       console.log(e);
-//       console.log(link);
+const tes1 = async () => {
+  let links = await getAnimeList(),
+    results = [],
+    bad = [],
+    i = 0;
 
-//       bad.push(link);
-//     }
-//   }
+  for (let link of links) {
+    i++;
+    console.log(`B - ${i}/${links.length}`)
+    try {
+      let mal = await search(link.title);
+      let eps = await getEpisodesList(link.url);
+      if (eps.ok) {
+        results.push({
+          ...mal,
+          ...eps,
+        });
+      } else {
+        bad.push(link);
+      }
+    } catch (e) {
+      console.log(e);
+      console.log(link);
 
-//   require('fs').writeFileSync(
-//     './res.json',
-//     JSON.stringify({
-//       results,
-//       bad
-//     })
-//   );
-// })();
+      bad.push(link);
+    }
+  }
+
+  require('fs').writeFileSync(
+    './res.json',
+    JSON.stringify({
+      results,
+      bad
+    })
+  );
+};
